@@ -5,7 +5,7 @@ const WEMOTE_SERVER = (function () {
 		s.src = src;
 		document.head.appendChild(s);
 	}
-	loadScript('https://laccolla.com/api/wemote/v1/qrcode.min.js');
+	loadScript('https://laccolla.com/api/wemote/v1/lib/qrcode.min.js');
 	loadScript('https://laccolla.com/api/wemote/v1/connection.js');
 
 	const HASH_LENGTH   = 16;

@@ -5,7 +5,7 @@
 		s.src = src;
 		document.head.appendChild(s);
 	}
-	loadScript('https://laccolla.com/api/wemote/v1/ayame.min.js');
+	loadScript('https://laccolla.com/api/wemote/v1/lib/ayame.min.js');
 })();
 
 const URL_SIGNALING = 'wss://ayame-lite.shiguredo.jp/signaling';
