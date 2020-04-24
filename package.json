@@ -1,0 +1,30 @@
+{
+  "name": "wemote",
+  "version": "1.0.0",
+  "description": "",
+  "author": "Takuto Yanagida",
+  "main": "gulpfile.js",
+  "scripts": {
+    "start": "gulp"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/takty/wemote.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/takty/wemote/issues"
+  },
+  "homepage": "https://github.com/takty/wemote#readme",
+  "dependencies": {
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^7.0.1",
+    "gulp-changed": "^4.0.2",
+    "gulp-load-plugins": "^2.0.2",
+    "gulp-plumber": "^1.2.1",
+    "gulp-rename": "^2.0.0",
+    "gulp-sass": "^4.0.2",
+    "gulp-sourcemaps": "^2.6.5",
+    "gulp-terser": "^1.2.0"
+  }
+}
