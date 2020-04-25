@@ -49,6 +49,6 @@ gulp.task('watch', () => {
 	gulp.watch('src/**/*.html', gulp.series('html'));
 });
 
-gulp.task('build', gulp.parallel('js', 'sass'));
+gulp.task('build', gulp.parallel('js', 'sass', 'html'));
 
 gulp.task('default', gulp.series('build', 'watch'));
