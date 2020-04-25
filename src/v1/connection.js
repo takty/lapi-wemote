@@ -26,13 +26,13 @@ window.WEMOTE = window['WEMOTE'] || {};
 			this._onState = onStateChange;
 
 			this._opts  = Ayame.defaultOptions;
-			this._label = 'dataChannel';
+			this._label = 'wemote';
 			this._con   = null;
 			this._ch    = null;
 		}
 
 		async start() {
-			this._con = Ayame.connection(URL_SIGNALING, this._roomId, this._opts, true);
+			this._con = Ayame.connection(URL_SIGNALING, this._roomId, this._opts, false);
 			this._con.on('open', async (e) => {
 				this._ch = await this._con.createDataChannel(this._label);
 				if (this._ch) {

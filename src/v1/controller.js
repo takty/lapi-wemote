@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	const href = location.href;
 	const pidx = href.indexOf('?');
 	const hash = pidx !== -1 ? href.substring(pidx + 1) : '';
+	const date = pidx !== -1 ? href.substring(href.length - 8) : '';
 
 	const roomId = ROOMID_PREFIX + hash;
 
@@ -41,6 +42,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	let con = null;
 	let starting = false;
+	let expired = false;
+
+	if (date !== getToday()) {
+		state.style.backgroundColor = 'rgba(170, 0, 0, 0.5)';
+		expired = true;
+	}
 
 	async function start() {
 		btnStart.disabled = true;
@@ -49,8 +56,9 @@ document.addEventListener('DOMContentLoaded', () => {
 		output.value = '';
 		await setEventListener();
 
+		if (expired) return;
 		if (con) stop();
-		con = new WEMOTE.Connection(roomId, null, onStageChange);
+		con = new WEMOTE.Connection(roomId, null/*onMessage*/, onStateChange);
 		setTimeout(() => { con.start(); }, 10);
 	}
 
@@ -65,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		con.send(data);
 	}
 
-	function onStageChange(msg, e) {
+	function onStateChange(msg, e) {
 		output.value = output.value + msg + '\n';
 		if (msg === 'connect') {
 			state.style.backgroundColor = 'rgba(0, 170, 0, 0.5)';
@@ -77,6 +85,10 @@ document.addEventListener('DOMContentLoaded', () => {
 			starting = false;
 			clearMeter();
 		}
+	}
+
+	function getToday() {
+		return new Date().toISOString().split('T')[0].replace(/-/g, '');
 	}
 
 
