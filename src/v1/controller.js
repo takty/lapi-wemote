@@ -36,9 +36,9 @@ document.addEventListener('DOMContentLoaded', () => {
 	const metAcgY = document.getElementById('acg-y');
 	const metAcgZ = document.getElementById('acg-z');
 
-	const metRtrX = document.getElementById('rtr-x');
-	const metRtrY = document.getElementById('rtr-y');
-	const metRtrZ = document.getElementById('rtr-z');
+	const metRotX = document.getElementById('rot-x');
+	const metRotY = document.getElementById('rot-y');
+	const metRotZ = document.getElementById('rot-z');
 
 	let con = null;
 	let starting = false;
@@ -141,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			y: Math.round(e.gamma), //  -90 -  90
 			z: Math.round(e.alpha)  //    0 - 360
 		};
-		send(JSON.stringify({ euler_angles: ds }));
+		send(JSON.stringify({ orientation: ds }));
 
 		setMeter(metOriX, ds.x, -180, 180);
 		setMeter(metOriY, ds.y,  -90,  90);
@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			y: Math.round(e.rotationRate.gamma), // -360 - 360
 			z: Math.round(e.rotationRate.alpha)  // -360 - 360
 		};
-		send(JSON.stringify({ acceleration: as, acceleration_gravity: ags, rotation_rate: rrs }));
+		send(JSON.stringify({ acceleration: as, acceleration_gravity: ags, rotation: rrs }));
 
 		setMeter(metAccX, as.x, -50, 50);
 		setMeter(metAccY, as.y, -50, 50);
@@ -175,9 +175,9 @@ document.addEventListener('DOMContentLoaded', () => {
 		setMeter(metAcgY, ags.y, -50, 50);
 		setMeter(metAcgZ, ags.z, -50, 50);
 
-		setMeter(metRtrX, rrs.x, -360, 360);
-		setMeter(metRtrY, rrs.y, -360, 360);
-		setMeter(metRtrZ, rrs.z, -360, 360);
+		setMeter(metRotX, rrs.x, -360, 360);
+		setMeter(metRotY, rrs.y, -360, 360);
+		setMeter(metRotZ, rrs.z, -360, 360);
 	}
 
 	function clearMeter() {
@@ -193,9 +193,9 @@ document.addEventListener('DOMContentLoaded', () => {
 		setMeter(metAcgY, 0, -50, 50);
 		setMeter(metAcgZ, 0, -50, 50);
 
-		setMeter(metRtrX, 0, -360, 360);
-		setMeter(metRtrY, 0, -360, 360);
-		setMeter(metRtrZ, 0, -360, 360);
+		setMeter(metRotX, 0, -360, 360);
+		setMeter(metRotY, 0, -360, 360);
+		setMeter(metRotZ, 0, -360, 360);
 	}
 
 	function setMeter(elm, val, min, max) {
