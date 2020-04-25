@@ -1,3 +1,10 @@
+/**
+ * Wemote Controller
+ * @author Takuto Yanagida
+ * @version 2020-04-25
+ */
+
+
 document.addEventListener('DOMContentLoaded', () => {
 	const URL_SIGNALING = 'wss://ayame-lite.shiguredo.jp/signaling';
 	const ROOMID_PREFIX = 'wemote-';
