@@ -1,12 +1,12 @@
 /**
- * Wemote Controller
+ * Controller - Wemote
  * @author Takuto Yanagida
  * @version 2020-04-25
  */
 
 
 document.addEventListener('DOMContentLoaded', () => {
-	const URL_SIGNALING = 'wss://ayame-lite.shiguredo.jp/signaling';
+
 	const ROOMID_PREFIX = 'wemote-';
 
 	const href = location.href;
@@ -14,9 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	const hash = pidx !== -1 ? href.substring(pidx + 1) : '';
 
 	const roomId = ROOMID_PREFIX + hash;
-	const label = 'dataChannel';
-	const options = Ayame.defaultOptions;
 
+	const state    = document.getElementById('state');
 	const output   = document.getElementById('output');
 	const btnStart = document.getElementById('btn-start');
 	const btnStop  = document.getElementById('btn-stop');
@@ -24,87 +23,121 @@ document.addEventListener('DOMContentLoaded', () => {
 	btnStart.addEventListener('click', start);
 	btnStop.addEventListener('click', stop);
 
+	const metOriX = document.getElementById('ori-x');
+	const metOriY = document.getElementById('ori-y');
+	const metOriZ = document.getElementById('ori-z');
+
+	const metAccX = document.getElementById('acc-x');
+	const metAccY = document.getElementById('acc-y');
+	const metAccZ = document.getElementById('acc-z');
+
+	const metAcgX = document.getElementById('acg-x');
+	const metAcgY = document.getElementById('acg-y');
+	const metAcgZ = document.getElementById('acg-z');
+
+	const metRtrX = document.getElementById('rtr-x');
+	const metRtrY = document.getElementById('rtr-y');
+	const metRtrZ = document.getElementById('rtr-z');
+
 	let con = null;
-	let channel = null;
+	let starting = false;
 
 	async function start() {
 		btnStart.disabled = true;
-		btnStop.disabled = false;
+		btnStop.disabled  = false;
+		starting = true;
+		output.value = '';
+		await setEventListener();
 
-		setEventListener();
-		con = Ayame.connection(URL_SIGNALING, roomId, options);
-		con.on('open', async (e) => {
-			channel = await con.createDataChannel(label);
-		});
-		con.on('datachannel', (ch) => {
-			if (!channel) channel = ch;
-		});
-		con.on('disconnect', (e) => {
-			console.log(e);
-			output.value = output.value + '\n' + e.toString();
-			channel = null;
-			btnStop.disabled = true;
-		});
-		await con.connect(null);
-	}
-
-	function send(data) {
-		if (channel && channel.readyState === 'open') {
-			channel.send(data);
-		}
+		if (con) stop();
+		con = new WEMOTE.Connection(roomId, null, onStageChange);
+		setTimeout(() => { con.start(); }, 10);
 	}
 
 	function stop() {
-		if (con) con.disconnect();
+		if (!con) return;
+		con.stop();
+		con = null;
+	}
+
+	function send(data) {
+		if (!con) return;
+		con.send(data);
+	}
+
+	function onStageChange(msg, e) {
+		output.value = output.value + msg + '\n';
+		if (msg === 'connect') {
+			state.style.backgroundColor = 'rgba(0, 170, 0, 0.5)';
+		}
+		if (msg === 'disconnect') {
+			state.style.backgroundColor = '';
+			btnStart.disabled = false;
+			btnStop.disabled  = true;
+			starting = false;
+			clearMeter();
+		}
 	}
 
 
 	// -------------------------------------------------------------------------
 
 
-	function setEventListener() {
-		if (DeviceMotionEvent.requestPermission) {
-			output.value = output.value + '\n' + 'request permission of device motion sensor';
-			DeviceMotionEvent.requestPermission().then((res) => {
-				output.value = output.value + '\n' + 'Can use device motion sensor';
-				if (res === 'granted') {
-					window.addEventListener('devicemotion', onDeviceMotion);
-				}
-			}).catch((e) => {
-				console.log(e);
-				output.value = output.value + '\n' + 'Cannot use device motion sensor';
-				output.value = output.value + '\n' + e.toString();
-			});
-		} else {
-			window.addEventListener('devicemotion', onDeviceMotion);
-		}
+	async function setEventListener() {
+		await setOrientationEventListener();
+		await setMotionEventListener();
+	}
+
+	async function setOrientationEventListener() {
 		if (DeviceOrientationEvent.requestPermission) {
-			output.value = output.value + '\n' + 'request permission of device orientation sensor';
-			DeviceOrientationEvent.requestPermission().then((res) => {
-				output.value = output.value + '\n' + 'Can use device orientation sensor';
-				if (res === 'granted') {
-					window.addEventListener('deviceorientation', onDeviceOrientation);
-				}
-			}).catch((e) => {
+			output.value = output.value + 'request permission of device orientation sensor\n';
+			const res = await DeviceOrientationEvent.requestPermission().catch((e) => {
 				console.log(e);
-				output.value = output.value + '\n' + 'Cannot use device orientation sensor';
-				output.value = output.value + '\n' + e.toString();
+				output.value = output.value + 'Cannot use device orientation sensor\n';
+				output.value = output.value + e.toString() + '\n';
 			});
+			if (res === 'granted') {
+				output.value = output.value + 'Can use device orientation sensor\n';
+				window.addEventListener('deviceorientation', onDeviceOrientation, true);
+			}
 		} else {
-			window.addEventListener('deviceorientation', onDeviceOrientation);
+			window.addEventListener('deviceorientation', onDeviceOrientation, true);
+		}
+	}
+
+	async function setMotionEventListener() {
+		if (DeviceMotionEvent.requestPermission) {
+			output.value = output.value + 'request permission of device motion sensor\n';
+			const res = await DeviceMotionEvent.requestPermission().catch((e) => {
+				console.log(e);
+				output.value = output.value + 'Cannot use device motion sensor\n';
+				output.value = output.value + e.toString() + '\n';
+			});
+			if (res === 'granted') {
+				output.value = output.value + 'Can use device motion sensor\n';
+				window.addEventListener('devicemotion', onDeviceMotion, true);
+			}
+		} else {
+			window.addEventListener('devicemotion', onDeviceMotion, true);
 		}
 	}
 
 	function onDeviceOrientation(e) {
+		if (!starting) return;
 		const ds = {
 			x: Math.round(e.beta),  // -180 - 180 [deg]
 			y: Math.round(e.gamma), //  -90 -  90
 			z: Math.round(e.alpha)  //    0 - 360
 		};
 		send(JSON.stringify({ euler_angles: ds }));
+
+		setMeter(metOriX, ds.x, -180, 180);
+		setMeter(metOriY, ds.y,  -90,  90);
+		setMeter(metOriZ, ds.z,    0, 360);
 	}
 
 	function onDeviceMotion(e) {
+		if (!starting) return;
 		const as = {
 			x: Math.round(e.acceleration.x * 100) / 100,  // [m/s2]
 			y: Math.round(e.acceleration.y * 100) / 100,
@@ -116,10 +149,56 @@ document.addEventListener('DOMContentLoaded', () => {
 			z: Math.round(e.accelerationIncludingGravity.z * 100) / 100
 		};
 		const rrs = {
-			x: Math.round(e.rotationRate.beta),  // -180 - 180 [deg]
-			y: Math.round(e.rotationRate.gamma), //  -90 -  90
-			z: Math.round(e.rotationRate.alpha)  //    0 - 360
+			x: Math.round(e.rotationRate.beta),  // -360 - 360 [deg]
+			y: Math.round(e.rotationRate.gamma), // -360 - 360
+			z: Math.round(e.rotationRate.alpha)  // -360 - 360
 		};
 		send(JSON.stringify({ acceleration: as, acceleration_gravity: ags, rotation_rate: rrs }));
+
+		setMeter(metAccX, as.x, -50, 50);
+		setMeter(metAccY, as.y, -50, 50);
+		setMeter(metAccZ, as.z, -50, 50);
+
+		setMeter(metAcgX, ags.x, -50, 50);
+		setMeter(metAcgY, ags.y, -50, 50);
+		setMeter(metAcgZ, ags.z, -50, 50);
+
+		setMeter(metRtrX, rrs.x, -360, 360);
+		setMeter(metRtrY, rrs.y, -360, 360);
+		setMeter(metRtrZ, rrs.z, -360, 360);
 	}
+
+	function clearMeter() {
+		setMeter(metOriX, 0, -180, 180);
+		setMeter(metOriY, 0,  -90,  90);
+		setMeter(metOriZ, 0,    0, 360);
+
+		setMeter(metAccX, 0, -50, 50);
+		setMeter(metAccY, 0, -50, 50);
+		setMeter(metAccZ, 0, -50, 50);
+
+		setMeter(metAcgX, 0, -50, 50);
+		setMeter(metAcgY, 0, -50, 50);
+		setMeter(metAcgZ, 0, -50, 50);
+
+		setMeter(metRtrX, 0, -360, 360);
+		setMeter(metRtrY, 0, -360, 360);
+		setMeter(metRtrZ, 0, -360, 360);
+	}
+
+	function setMeter(elm, val, min, max) {
+		if (min === 0) {
+			elm.style.left  = '0';
+			elm.style.right = ((max - val) / max * 100) + '%';
+		} else {
+			if (val < 0) {
+				elm.style.left  = ((val - min) / -min * 50) + '%';
+				elm.style.right = '50%';
+			} else {
+				elm.style.left  = '50%';
+				elm.style.right = ((max - val) / max * 50) + '%';
+			}
+		}
+	}
+
 });

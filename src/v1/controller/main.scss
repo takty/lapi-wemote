@@ -1,0 +1,66 @@
+body {
+	font-family: sans-serif;
+	font-size: 16px;
+}
+
+#state {
+	display: inline-block;
+	border-radius: 50%;
+	width: 1rem;
+	height: 1rem;
+	box-shadow: 0 0 4px rgba(#000, 0.25) inset;
+}
+
+button {
+	min-width: 48px;
+    min-height: 48px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 1.5rem;
+	box-shadow: 1px 1px 8px rgba(#000, 0.4);
+    padding: 4px 24px;
+    overflow: hidden;
+	border-radius: 8px;
+	border: none;
+	background-color: inherit;
+	font-size: inherit;
+
+	&[disabled] {
+		box-shadow: 0 0 4px rgba(#000, 0.25);
+	}
+}
+
+textarea { max-width: 100%; }
+
+.meter {
+	margin-top: 0.25rem;
+	min-height: 0.5rem;
+	box-shadow: 0 0 4px rgba(#000, 0.25) inset;
+
+	max-width: 360px;
+
+	position: relative;
+	> div {
+		position: absolute;
+		top: 0;
+		left: 50%;
+		right: 50%;
+		bottom: 0;
+		background-color: rgba(#0a0, 0.5);
+	}
+}
+
+.button-pane {
+	display: flex;
+	align-items: center;
+}
+
+.meter-pane {
+	> div + div { margin-top: 0.75rem; }
+}
+
+.meter-pane,
+.output-pane {
+	margin-top: 1rem;
+}
