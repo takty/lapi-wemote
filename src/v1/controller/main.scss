@@ -1,7 +1,7 @@
 /**
  * Controller - Wemote
  * @author Takuto Yanagida
- * @version 2020-04-25
+ * @version 2020-04-27
  */
 
 
@@ -12,33 +12,47 @@ body {
 
 #state {
 	display: inline-block;
-	border-radius: 50%;
 	width: 1rem;
 	height: 1rem;
+	border-radius: 50%;
 	box-shadow: 0 0 4px rgba(#000, 0.25) inset;
 }
 
+h1 {
+	font-size: 1.75rem;
+	margin: { top: 0.5rem; bottom: 0.5rem; }
+}
+
 button {
-	min-width: 48px;
-    min-height: 48px;
     display: inline-flex;
     justify-content: center;
     align-items: center;
+
+	min-width: 3rem;
+    min-height: 3rem;
     margin-right: 1.5rem;
-	box-shadow: 1px 1px 8px rgba(#000, 0.4);
-    padding: 4px 24px;
-    overflow: hidden;
-	border-radius: 8px;
+
+    padding: 0.25rem 1.5rem;
 	border: none;
+	border-radius: 0.5rem;
+	box-shadow: 1px 1px 8px rgba(#000, 0.4);
 	background-color: inherit;
 	font-size: inherit;
 
-	&[disabled] {
-		box-shadow: 0 0 4px rgba(#000, 0.25);
-	}
+	&[disabled] { box-shadow: 0 0 4px rgba(#000, 0.25); }
 }
 
-textarea { max-width: 100%; }
+textarea {
+	width: 100%;
+	max-width: 360px;
+
+	font-family: inherit;
+
+	border: none;
+	border-radius: 0;
+	box-shadow: 0 0 4px rgba(#000, 0.25) inset;
+	-webkit-appearance: none;
+}
 
 .meter {
 	margin-top: 0.25rem;

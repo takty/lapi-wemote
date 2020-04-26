@@ -1,7 +1,7 @@
 /**
  * Controller - Wemote
  * @author Takuto Yanagida
- * @version 2020-04-25
+ * @version 2020-04-27
  */
 
 
@@ -9,10 +9,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	const ROOMID_PREFIX = 'wemote-';
 
+	const MSG_EXPIRATION = 'Your session has expired.\n';
+	const MSG_PER_ORI    = 'Requesting permission of device orientation sensor...\n';
+	const MSG_PER_MOT    = 'Requesting permission of device motion sensor...\n';
+	const MSG_OK         = 'OK!\n';
+	const MSG_REJECTED   = 'Rejected!\n';
+
 	const href = location.href;
 	const pidx = href.indexOf('?');
-	const hash = pidx !== -1 ? href.substring(pidx + 1) : '';
-	const date = pidx !== -1 ? href.substring(href.length - 8) : '';
+	const hash = pidx === -1 ? '' : href.substring(pidx + 1);
+	const date = pidx === -1 ? '' : href.substring(href.length - 8);
 
 	const roomId = ROOMID_PREFIX + hash;
 
@@ -40,55 +46,70 @@ document.addEventListener('DOMContentLoaded', () => {
 	const metRotY = document.getElementById('rot-y');
 	const metRotZ = document.getElementById('rot-z');
 
-	let con = null;
-	let starting = false;
-	let expired = false;
+	let con        = null;
+	let isStarting = false;
+	let isExpired  = false;
+	let isFirst    = true;
 
-	if (date !== getToday()) {
+	const today = new Date().toISOString().split('T')[0].replace(/-/g, '');
+	if (date !== today) {
 		state.style.backgroundColor = 'rgba(170, 0, 0, 0.5)';
-		expired = true;
+		isExpired = true;
+		output.value = MSG_EXPIRATION;
 	}
 
 	async function start() {
-		btnStart.disabled = true;
-		btnStop.disabled  = false;
-		starting = true;
-		output.value = '';
-		await setEventListener();
-
-		if (expired) return;
-		if (con) stop();
-		con = new WEMOTE.Connection(roomId, null/*onMessage*/, onStateChange);
-		setTimeout(() => { con.start(); }, 10);
+		turnOn();
+		if (!isExpired) {
+			if (con) stop();
+			con = new WEMOTE.Connection(roomId, null, onStateChange);
+			setTimeout(() => { con.start(); }, 10);
+		}
 	}
 
 	function stop() {
-		if (!con) return;
-		con.stop();
-		con = null;
-	}
-
-	function send(data) {
-		if (!con) return;
-		con.send(data);
+		turnOff();
+		if (!isExpired) {
+			if (!con) return;
+			con.stop();
+			con = null;
+		}
 	}
 
 	function onStateChange(msg, e) {
 		output.value = output.value + msg + '\n';
-		if (msg === 'connect') {
-			state.style.backgroundColor = 'rgba(0, 170, 0, 0.5)';
-		}
-		if (msg === 'disconnect') {
+		if (msg === 'open') {
+			state.style.backgroundColor = 'rgba(0, 170, 0, 0.25)';
+		} else if (msg === 'connect') {
+			state.style.backgroundColor = 'rgba(0, 170, 0, 0.75)';
+		} else if (msg === 'disconnect') {
 			state.style.backgroundColor = '';
-			btnStart.disabled = false;
-			btnStop.disabled  = true;
-			starting = false;
-			clearMeter();
+			turnOff();
 		}
 	}
 
-	function getToday() {
-		return new Date().toISOString().split('T')[0].replace(/-/g, '');
+	function turnOn() {
+		btnStart.disabled = true;
+		btnStop.disabled  = false;
+		isStarting        = true;
+		output.value      = isExpired ? MSG_EXPIRATION : '';
+
+		if (isFirst) {
+			setEventListener();
+			isFirst = false;
+		}
+	}
+
+	function turnOff() {
+		btnStart.disabled = false;
+		btnStop.disabled  = true;
+		isStarting        = false;
+		output.value      = isExpired ? MSG_EXPIRATION : '';
+		clearMeter();
+	}
+
+	function send(data) {
+		if (con) con.send(data);
 	}
 
 
@@ -102,14 +123,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	async function setOrientationEventListener() {
 		if (DeviceOrientationEvent.requestPermission) {
-			output.value = output.value + 'request permission of device orientation sensor\n';
+			output.value = output.value + MSG_PER_ORI;
 			const res = await DeviceOrientationEvent.requestPermission().catch((e) => {
-				console.log(e);
-				output.value = output.value + 'Cannot use device orientation sensor\n';
+				output.value = output.value + MSG_REJECTED;
 				output.value = output.value + e.toString() + '\n';
+				console.log(e);
 			});
 			if (res === 'granted') {
-				output.value = output.value + 'Can use device orientation sensor\n';
+				output.value = output.value + MSG_OK;
 				window.addEventListener('deviceorientation', onDeviceOrientation, true);
 			}
 		} else {
@@ -119,14 +140,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	async function setMotionEventListener() {
 		if (DeviceMotionEvent.requestPermission) {
-			output.value = output.value + 'request permission of device motion sensor\n';
+			output.value = output.value + MSG_PER_MOT;
 			const res = await DeviceMotionEvent.requestPermission().catch((e) => {
-				console.log(e);
-				output.value = output.value + 'Cannot use device motion sensor\n';
+				output.value = output.value + MSG_REJECTED;
 				output.value = output.value + e.toString() + '\n';
+				console.log(e);
 			});
 			if (res === 'granted') {
-				output.value = output.value + 'Can use device motion sensor\n';
+				output.value = output.value + MSG_OK;
 				window.addEventListener('devicemotion', onDeviceMotion, true);
 			}
 		} else {
@@ -135,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	function onDeviceOrientation(e) {
-		if (!starting) return;
+		if (!isStarting) return;
 		const ds = {
 			x: Math.round(e.beta),  // -180 - 180 [deg]
 			y: Math.round(e.gamma), //  -90 -  90
@@ -149,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	function onDeviceMotion(e) {
-		if (!starting) return;
+		if (!isStarting) return;
 		const as = {
 			x: Math.round(e.acceleration.x * 100) / 100,  // [m/s2]
 			y: Math.round(e.acceleration.y * 100) / 100,
