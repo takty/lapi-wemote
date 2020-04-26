@@ -1,5 +1,5 @@
 {
-  "name": "wemote",
+  "name": "lapi-wemote",
   "version": "1.0.0",
   "description": "",
   "author": "Takuto Yanagida",
@@ -9,13 +9,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/takty/wemote.git"
+    "url": "git+https://github.com/takty/lapi-wemote.git"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/takty/wemote/issues"
+    "url": "https://github.com/takty/lapi-wemote/issues"
   },
-  "homepage": "https://github.com/takty/wemote#readme",
+  "homepage": "https://github.com/takty/lapi-wemote#readme",
   "dependencies": {
     "gulp": "^4.0.2",
     "gulp-autoprefixer": "^7.0.1",
