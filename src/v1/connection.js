@@ -1,7 +1,7 @@
 /**
  * Connection - Wemote
  * @author Takuto Yanagida
- * @version 2020-04-25
+ * @version 2020-11-21
  */
 
 
@@ -9,7 +9,7 @@ window.WEMOTE = window['WEMOTE'] || {};
 
 
 (function (NS) {
-	const URL_SIGNALING = 'wss://ayame-lite.shiguredo.jp/signaling';
+	const URL_SIGNALING = 'wss://ayame-labo.shiguredo.jp/signaling';
 
 	function loadScript(src) {
 		const s = document.createElement('script');
@@ -26,6 +26,7 @@ window.WEMOTE = window['WEMOTE'] || {};
 			this._onState = onStateChange;
 
 			this._opts  = Ayame.defaultOptions;
+			this._opts.signalingKey = 'lOCeAUV2R2rOjf0aff90scxQTuZu6tMljfez9m4sm3Sjrdw-';
 			this._label = 'wemote';
 			this._con   = null;
 			this._ch    = null;
