@@ -1,7 +1,7 @@
 /**
  * Connection - Wemote
  * @author Takuto Yanagida
- * @version 2020-11-21
+ * @version 2020-11-22
  */
 
 
@@ -33,7 +33,7 @@ window.WEMOTE = window['WEMOTE'] || {};
 		}
 
 		async start() {
-			this._con = Ayame.connection(URL_SIGNALING, this._roomId, this._opts, false);
+			this._con = Ayame.connection(URL_SIGNALING, 'takty@' + this._roomId, this._opts, false);
 			this._con.on('open', async (e) => {
 				this._ch = await this._con.createDataChannel(this._label);
 				if (this._ch) {
