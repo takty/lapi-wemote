@@ -16,6 +16,9 @@
 		"url": "https://github.com/takty/lapi-wemote/issues"
 	},
 	"homepage": "https://github.com/takty/lapi-wemote#readme",
+	"devDependencies": {
+		"postcss": ">=8.2.10"
+	},
 	"dependencies": {
 		"gulp": "^4.0.2",
 		"gulp-autoprefixer": "^7.0.1",
