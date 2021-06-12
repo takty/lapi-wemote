@@ -5,13 +5,11 @@ const gulp = require('gulp');
 const $ = require('gulp-load-plugins')({ pattern: ['gulp-*'] });
 
 
-gulp.task('js-min', () => gulp.src(['src/**/*.js', '!src/**/*.min.js'])
+gulp.task('js-min', () => gulp.src(['src/**/*.js', '!src/**/*.min.js'], { sourcemaps: true })
 	.pipe($.plumber())
-	.pipe($.sourcemaps.init())
 	.pipe($.terser())
 	.pipe($.rename({ extname: '.min.js' }))
-	.pipe($.sourcemaps.write('.'))
-	.pipe(gulp.dest('./dist'))
+	.pipe(gulp.dest('./dist', { sourcemaps: '.' }))
 );
 
 gulp.task('js-copy', () => gulp.src(['src/**/*.min.js'])
@@ -22,19 +20,17 @@ gulp.task('js-copy', () => gulp.src(['src/**/*.min.js'])
 
 gulp.task('js', gulp.parallel('js-min', 'js-copy'));
 
-gulp.task('sass', () => gulp.src(['src/**/*.scss'])
+gulp.task('sass', () => gulp.src(['src/**/*.scss'], { sourcemaps: true })
 	.pipe($.plumber({
 		errorHandler: function (err) {
 			console.log(err.messageFormatted);
 			this.emit('end');
 		}
 	}))
-	.pipe($.sourcemaps.init())
-	.pipe($.sass({ outputStyle: 'compressed' }))
+	.pipe($.dartSass({ outputStyle: 'compressed' }))
 	.pipe($.autoprefixer({ remove: false }))
 	.pipe($.rename({ extname: '.min.css' }))
-	.pipe($.sourcemaps.write('.'))
-	.pipe(gulp.dest('./dist'))
+	.pipe(gulp.dest('./dist', { sourcemaps: '.' }))
 );
 
 gulp.task('html', () => gulp.src(['src/**/*.html'])
