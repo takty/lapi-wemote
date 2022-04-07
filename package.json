@@ -17,7 +17,7 @@
 	},
 	"homepage": "https://github.com/takty/lapi-wemote#readme",
 	"devDependencies": {
-		"postcss": ">=8.4.5"
+		"postcss": ">=8.4.12"
 	},
 	"dependencies": {
 		"gulp": "^4.0.2",
