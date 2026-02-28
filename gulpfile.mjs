@@ -1,41 +1,46 @@
-/* eslint-disable no-undef */
-'use strict';
+import gulp from 'gulp';
+import plumber from 'gulp-plumber';
+import autoprefixer from 'gulp-autoprefixer';
+import terser from 'gulp-terser';
+import rename from 'gulp-rename';
+import changed, { compareContents } from 'gulp-changed';
 
-const gulp = require('gulp');
-const $ = require('gulp-load-plugins')({ pattern: ['gulp-*'] });
-
+import * as dartSass from 'sass';
+import gulpSass from 'gulp-sass';
+const sass = gulpSass(dartSass);
 
 gulp.task('js-min', () => gulp.src(['src/**/*.js', '!src/**/*.min.js'], { sourcemaps: true })
-	.pipe($.plumber())
-	.pipe($.terser())
-	.pipe($.rename({ extname: '.min.js' }))
+	.pipe(plumber())
+	.pipe(terser())
+	.pipe(rename({ extname: '.min.js' }))
 	.pipe(gulp.dest('./dist', { sourcemaps: '.' }))
 );
 
 gulp.task('js-copy', () => gulp.src(['src/**/*.min.js'])
-	.pipe($.plumber())
-	.pipe($.changed('./dist'))
+	.pipe(plumber())
+	.pipe(changed('./dist', { hasChanged: compareContents }))
 	.pipe(gulp.dest('./dist'))
 );
 
 gulp.task('js', gulp.parallel('js-min', 'js-copy'));
 
 gulp.task('sass', () => gulp.src(['src/**/*.scss'], { sourcemaps: true })
-	.pipe($.plumber({
+	.pipe(plumber({
 		errorHandler: function (err) {
 			console.log(err.messageFormatted);
 			this.emit('end');
 		}
 	}))
-	.pipe($.dartSass({ outputStyle: 'compressed' }))
-	.pipe($.autoprefixer({ remove: false }))
-	.pipe($.rename({ extname: '.min.css' }))
+	.pipe(sass.sync({ outputStyle: 'compressed' }))
+	.pipe(autoprefixer({ remove: false }))
+	.pipe(rename({ extname: '.min.css' }))
+	.pipe(changed('./dist', { hasChanged: compareContents }))
 	.pipe(gulp.dest('./dist', { sourcemaps: '.' }))
 );
 
 gulp.task('html', () => gulp.src(['src/**/*.html'])
-	.pipe($.plumber())
-	.pipe($.changed('./dist'))
+	.pipe(plumber())
+	.pipe(changed('./dist', { hasChanged: compareContents }))
 	.pipe(gulp.dest('./dist'))
 );
 
