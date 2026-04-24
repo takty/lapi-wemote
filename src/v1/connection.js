@@ -16,7 +16,7 @@ window.WEMOTE = window['WEMOTE'] || {};
 		s.src = src;
 		document.head.appendChild(s);
 	}
-	loadScript('https://laccolla.com/api/wemote/v1/lib/ayame.min.js');
+	loadScript('https://takty.net/api/wemote/v1/lib/ayame.min.js');
 
 	class Connection {
 

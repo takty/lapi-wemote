@@ -9,7 +9,7 @@ window.WEMOTE = window['WEMOTE'] || {};
 
 
 (function (NS) {
-	const URL_CONTROLLER = 'https://laccolla.com/api/wemote/v1/controller/';
+	const URL_CONTROLLER = 'https://takty.net/api/wemote/v1/controller/';
 	const ROOMID_PREFIX  = 'wemote-';
 	const HASH_LENGTH    = 16;
 
@@ -18,8 +18,8 @@ window.WEMOTE = window['WEMOTE'] || {};
 		s.src = src;
 		document.head.appendChild(s);
 	}
-	loadScript('https://laccolla.com/api/wemote/v1/lib/qrcode.min.js');
-	loadScript('https://laccolla.com/api/wemote/v1/connection.min.js');
+	loadScript('https://takty.net/api/wemote/v1/lib/qrcode.min.js');
+	loadScript('https://takty.net/api/wemote/v1/connection.min.js');
 
 	function createId() {
 		const date = localStorage.getItem('wemote-date');

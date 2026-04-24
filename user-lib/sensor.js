@@ -7,7 +7,7 @@
 
 
 const SENSOR = (function () {
-	CROQUJS.loadScriptSync('https://laccolla.com/api/wemote/v1/receiver.min.js?test');
+	CROQUJS.loadScriptSync('https://takty.net/api/wemote/v1/receiver.min.js?test');
 
 	'use strict';
 
