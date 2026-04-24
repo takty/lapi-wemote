@@ -9,7 +9,7 @@ window.WEMOTE = window['WEMOTE'] || {};
 
 
 (function (NS) {
-	const URL_SIGNALING = 'wss://ayame-labo.shiguredo.jp/signaling';
+	const URL_SIGNALING = 'wss://ayame-labo.shiguredo.app/signaling';
 
 	function loadScript(src) {
 		const s = document.createElement('script');
