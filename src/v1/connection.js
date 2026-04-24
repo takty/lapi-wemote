@@ -1,7 +1,7 @@
 /**
  * Connection - Wemote
  * @author Takuto Yanagida
- * @version 2020-11-22
+ * @version 2026-04-24
  */
 
 
