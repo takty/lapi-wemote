@@ -7,7 +7,7 @@
 
 import * as receiver from 'https://takty.net/api/wemote/v1/receiver.min.js';
 
-const URL_CONTROLLER = 'https://takty.net/api/wemote/sample_controller/';
+const URL_CONTROLLER = 'https://takty.net/api/wemote/sample-ctrl/';
 
 export class Motion {
 
