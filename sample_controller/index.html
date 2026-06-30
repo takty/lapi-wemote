@@ -1,0 +1,44 @@
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Wemote Controller</title>
+	<link rel="stylesheet" href="style.css">
+	<script src="index.js" type="module"></script>
+</head>
+<body>
+	<header>
+		<h1>Wemote Controller</h1>
+	</header>
+	<div class="button-pane">
+		<button id="btn-start">Start</button>
+		<button id="btn-stop" disabled>Stop</button>
+		<span id="state"></span>
+	</div>
+	<div class="meter-pane">
+		<div>
+			<div class="meter"><div id="ori-x"></div></div>
+			<div class="meter"><div id="ori-y"></div></div>
+			<div class="meter"><div id="ori-z"></div></div>
+		</div>
+		<div>
+			<div class="meter"><div id="acc-x"></div></div>
+			<div class="meter"><div id="acc-y"></div></div>
+			<div class="meter"><div id="acc-z"></div></div>
+		</div>
+		<div>
+			<div class="meter"><div id="acg-x"></div></div>
+			<div class="meter"><div id="acg-y"></div></div>
+			<div class="meter"><div id="acg-z"></div></div>
+		</div>
+		<div>
+			<div class="meter"><div id="rot-x"></div></div>
+			<div class="meter"><div id="rot-y"></div></div>
+			<div class="meter"><div id="rot-z"></div></div>
+		</div>
+	</div>
+	<div class="output-pane">
+		<textarea id="output" cols="48" rows="10"></textarea>
+	</div>
+</body>
+</html>

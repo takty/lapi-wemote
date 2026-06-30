@@ -1,0 +1,26 @@
+{
+	"name": "lapi-wemote",
+	"version": "1.0.0",
+	"description": "",
+	"author": "Takuto Yanagida",
+	"main": "gulpfile.js",
+	"scripts": {
+		"build": "node build.mjs",
+		"start": "node build.mjs --watch"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/takty/lapi-wemote.git"
+	},
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/takty/lapi-wemote/issues"
+	},
+	"homepage": "https://github.com/takty/lapi-wemote#readme",
+	"dependencies": {
+		"@open-ayame/ayame-web-sdk": "^2025.1.1",
+		"esbuild": "^0.28.1",
+		"typescript": "^6.0.3"
+	},
+	"packageManager": "yarn@4.14.1"
+}

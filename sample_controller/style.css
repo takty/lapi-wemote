@@ -1,0 +1,87 @@
+/**
+ * Controller - Wemote
+ * @author Takuto Yanagida
+ * @version 2020-04-27
+ */
+
+
+body {
+	font-family: sans-serif;
+	font-size: 16px;
+}
+
+#state {
+	display: inline-block;
+	width: 1rem;
+	height: 1rem;
+	border-radius: 50%;
+	box-shadow: 0 0 4px rgba(#000, 0.25) inset;
+}
+
+h1 {
+	font-size: 1.75rem;
+	margin-block: 0.5rem;
+}
+
+button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+
+	min-width: 3rem;
+    min-height: 3rem;
+    margin-right: 1.5rem;
+
+    padding: 0.25rem 1.5rem;
+	border: none;
+	border-radius: 0.5rem;
+	box-shadow: 1px 1px 8px rgba(#000, 0.4);
+	background-color: inherit;
+	font-size: inherit;
+
+	&[disabled] { box-shadow: 0 0 4px rgba(#000, 0.25); }
+}
+
+textarea {
+	width: 100%;
+	max-width: 360px;
+
+	font-family: inherit;
+
+	border: none;
+	border-radius: 0;
+	box-shadow: 0 0 4px rgba(#000, 0.25) inset;
+	appearance: none;
+}
+
+.meter {
+	margin-top: 0.25rem;
+	min-height: 0.5rem;
+	box-shadow: 0 0 4px rgba(#000, 0.25) inset;
+
+	max-width: 360px;
+
+	position: relative;
+	> div {
+		position: absolute;
+		top: 0;
+		left: 50%;
+		right: 50%;
+		bottom: 0;
+		background-color: rgba(#0a0, 0.5);
+	}
+}
+
+.button-pane {
+	display: flex;
+	align-items: center;
+}
+
+.meter-pane {
+	& > div + div { margin-top: 0.75rem; }
+}
+
+.meter-pane,
+.output-pane {
+	margin-top: 1.5rem;
+}
